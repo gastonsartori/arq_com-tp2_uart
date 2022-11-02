@@ -102,11 +102,7 @@ end
 
 always@(*)
 begin
-    next_dato_A = dato_A;
-    next_dato_B = dato_B;
-    next_OP = OP;
     next_flag = flag;
-    next_interface_data = interface_data;
     case(state)
         DATO_A_STATE:
         begin
@@ -119,10 +115,11 @@ begin
             end
             else
             begin
+                next_dato_A = dato_A; 
                 if(flag)
                 begin
                     next_state = DATO_B_STATE;
-                    next_flag = 0;
+                    next_flag = 1'b0;
                 end
                 else
                     next_state = DATO_A_STATE;
@@ -134,12 +131,12 @@ begin
             if(i_rx_done == 1'b1)
             begin
                 next_dato_B = i_rx_data;
-                //data_B_valid = 1'b1;
                 next_flag = 1;
                 next_state = DATO_B_STATE;
             end
             else
             begin
+                next_dato_B = dato_B; 
                 if(flag)
                 begin
                     next_state = OP_STATE;
@@ -149,17 +146,18 @@ begin
                     next_state = DATO_B_STATE;
             end
         end        
-        OP_STATE: 
+        OP_STATE:
+         
         begin
             if(i_rx_done == 1'b1)
             begin
                 next_OP = i_rx_data;
-                //OP_valid = 1'b1;
                 next_flag = 1;
                 next_state = OP_STATE;
             end
             else
             begin
+                next_OP = OP;
                 if(flag)
                 begin
                     next_state = SAVE_STATE;
@@ -183,7 +181,6 @@ begin
         default:
         begin
             next_state = DATO_A_STATE;
-            interface_done = 1'b0;
         end
 
     endcase              

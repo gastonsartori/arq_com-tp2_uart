@@ -6,7 +6,8 @@ module top#(
     input i_top_rx,
     input i_top_clock,
     input i_top_reset,
-    output o_top_tx
+    output o_top_tx,
+    output [NB_DATA-1:0] o_alu
 );
 
 wire [NB_DATA-1:0] rx_data;
@@ -69,6 +70,6 @@ transmitter u_transmitter(
     //.o_tx_done(tx_done)
 );
 
-//assign o_top_tx = top_tx;
+assign o_alu = alu_result;
 
 endmodule

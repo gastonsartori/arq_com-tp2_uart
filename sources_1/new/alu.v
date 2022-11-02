@@ -10,14 +10,14 @@ module alu#(
     output wire [NB_DATA-1 :0] o_result //9bits, incluye carry
 );
 
-localparam OP_ADD = 6'b100000;
-localparam OP_SUB = 6'b100010;
-localparam OP_AND = 6'b100100;
-localparam OP_OR = 6'b100101;
-localparam OP_XOR = 6'b100110;
-localparam OP_SRA = 6'b000011;
-localparam OP_SRL = 6'b000010;
-localparam OP_NOR = 6'b100111; 
+localparam OP_ADD = 6'b100000; //hex 20
+localparam OP_SUB = 6'b100010; //hex 22
+localparam OP_AND = 6'b100100; //hex 24
+localparam OP_OR = 6'b100101; //hex 25
+localparam OP_XOR = 6'b100110; //hex 26
+localparam OP_SRA = 6'b000011; //hex 3
+localparam OP_SRL = 6'b000010; //hex 2
+localparam OP_NOR = 6'b100111;  //hex 27
 
 reg [NB_DATA-1 :0] result;
 

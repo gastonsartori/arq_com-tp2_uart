@@ -87,23 +87,28 @@ end
 
 always@(*)
 begin
-    next_state = state;
-    next_data_counter = data_counter;
-    next_tick_counter = tick_counter;
-    next_tx_data = tx_data;
-    next_tx_out = tx_out;
+    //next_state = state;
+    //next_data_counter = data_counter;
+    //next_tick_counter = tick_counter;
+    //next_tx_data = tx_data;
+    //next_tx_out = tx_out;
     case(state)
         IDLE_STATE:
         begin
             next_tx_out = 1'b1;
+            next_tick_counter = {NB_TICK_COUNTER{1'b0}};
+            next_data_counter = {NB_DATA_COUNTER{1'b0}};
+            
             if(i_interface_done)
             begin
                 next_tx_data = i_interface_data;
-                next_tick_counter = {NB_TICK_COUNTER{1'b0}};
                 next_state = START_STATE;
             end
             else
+            begin
+                next_tx_data = tx_data;
                 next_state = IDLE_STATE;
+            end
         end
         START_STATE:
         begin
@@ -112,9 +117,8 @@ begin
             begin
                 if(tick_counter == 4'b1111)
                 begin
-                    next_state = DATA_STATE;
                     next_tick_counter = {NB_TICK_COUNTER{1'b0}};
-                    next_data_counter = {NB_DATA_COUNTER{1'b0}}; 
+                    next_state = DATA_STATE;
                 end
                 else
                 begin
@@ -122,6 +126,11 @@ begin
                     next_state = START_STATE;
                 end
             end
+            else
+            begin
+                next_tick_counter = tick_counter;
+                next_state = START_STATE;
+            end    
         end    
         DATA_STATE:
         begin
@@ -144,6 +153,13 @@ begin
                     next_state = DATA_STATE;
                 end      
             end
+            else
+            begin
+                next_state = DATA_STATE;
+                next_tx_data = tx_data;
+                next_tick_counter = tick_counter;
+                next_data_counter = data_counter;
+            end
         end        
         STOP_STATE: //estado para verificar recepcion de bit de STOP
         begin
@@ -157,6 +173,11 @@ begin
                     next_tick_counter = tick_counter + 1;
                     next_state = STOP_STATE;
                 end
+            end
+            else
+            begin
+                next_state = STOP_STATE;
+                next_tick_counter = tick_counter;
             end
         end
         default:
